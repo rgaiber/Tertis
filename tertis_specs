@@ -1,0 +1,57 @@
+board is 10x20 (10 columns, 20 rows)
+
+Robby was here
+
+Types of tetris pieces:
+LINE	LEFT_HOOK	RIGHT_HOOK	LEFT_BUMP	RIGHT_BUMP	MIDDLE_BUMP
+xxxx	x   		  x 		xx 			 xx 		 x
+		xxx 		xxx 		 xx 		xx 			xxx
+
+Types of rotations of each piece:
+
+Rules of Tertis:
+1. There is only one active piece at a time. 
+2. User can trigger the below 6 events for the piece.
+3. Active piece drops at a fixed rate. 
+4. If piece is lowered to clear a line (all columns within that row are occupied by a piece), 
+then:
+the line is removed from the game
+all rows above are shifted down by 1 and a new, empty row is added to the top. 
+
+5. The score is incremented based on number of lines cleared with point structure as follows:
+	1: 1 line, 2: 2 lines, 4: 3 lines, 8: 4 lines
+6. Once the active piece reaches the minimum row it can reach without colliding with another 
+existing piece, a new Tetramino is randomly assigned as the active piece and begins to drop
+
+Events
+1. User attempts to move piece left.
+2. User attempts to move piece right.
+3. User attempts to rotate piece left.
+4. User attempts to rotate piece right.
+5. User attempts to lower piece by a single row.
+
+Expanded Rules for Each Event:
+Event 1:
+	1. If a piece cannot be moved left (there are other pieces or a wall obstructing at least 
+	one of the 4 sections from moving left), then can_move_left returns false and no change in 
+	position of active tetramino.
+	2. If a piece can be moved left, then can_move_left returns true and each section of active
+	piece is moved 1 column to the left.
+Event 2:
+	Same as event 1, but right.
+Event 3: 
+	For the currently active piece type, take the next rotation (increased by one) in the types 
+	of rotations for that piece.
+Event 4:
+	Same as event 3, but take the previous rotation (decreased by one) in the types of rotations
+	for that piece.
+Event 5:
+	1. If it is possible to lower the piece by one row (there are no pieces in same column, 1 row 
+	lower) for any of the sections of currently active piece, then can_lower_piece() returns true.
+	2. If can_lower_piece() returns true, lower_piece() is called and each section of currently 
+	active piece is decreased by 1 row.
+	3. If is it not possible to lower the piece by 1 row (there is at least 1 piece in same 
+	column, 1 row lower) for any of the sections of currently active piece, then can_lower_piece(1) 
+	returns false.
+	4. If can_lower_piece(1) returns false, then there are no changes to location of currently active 
+	piece and a new active piece is generated.
